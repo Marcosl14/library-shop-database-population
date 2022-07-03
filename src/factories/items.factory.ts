@@ -21,7 +21,7 @@ define(Item, (faker: typeof Faker) => {
   });
   item.discount = faker.random.number({
     min: 0,
-    max: 100,
+    max: 75,
     precision: 5,
   });
   item.brand = faker.lorem.word(50);
