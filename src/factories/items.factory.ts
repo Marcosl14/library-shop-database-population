@@ -20,9 +20,9 @@ define(Item, (faker: typeof Faker) => {
     precision: 0.01,
   });
   item.discount = faker.random.number({
-    min: 1,
+    min: 0,
     max: 100,
-    precision: 1,
+    precision: 5,
   });
   item.brand = faker.lorem.word(50);
   item.deletedAt = Math.random() < 0.2 ? faker.date.past() : null;

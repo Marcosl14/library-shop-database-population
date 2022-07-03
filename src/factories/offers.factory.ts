@@ -20,9 +20,9 @@ define(Offer, (faker: typeof Faker) => {
     precision: 0.01,
   });
   item.discount = faker.random.number({
-    min: 1,
+    min: 0,
     max: 100,
-    precision: 1,
+    precision: 5,
   });
 
   return item;
