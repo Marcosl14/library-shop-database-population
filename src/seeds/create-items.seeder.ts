@@ -17,24 +17,32 @@ export default class CreateItems implements Seeder {
       })
       .createMany(2000);
 
-    const offerItems = await factory(OfferItem)()
-      .map(async (offerItem) => {
-        while (true) {
-          const index = Math.floor(Math.random() * items.length);
-          if (items[index].deletedAt == null) {
-            offerItem.item = items[index];
-            return offerItem;
-          }
-        }
-      })
-      .createMany(200);
+    // const offerItems = await factory(OfferItem)()
+    //   .map(async (offerItem) => {
+    //     while (true) {
+    //       const index = Math.floor(Math.random() * items.length);
+    //       if (items[index].deletedAt == null) {
+    //         offerItem.item = items[index];
+    //         return offerItem;
+    //       }
+    //     }
+    //   })
+    //   .createMany(200);
 
     const offers = await factory(Offer)()
       .map(async (offer) => {
         offer.offerItems = [];
         for (let index = 0; index < Math.random() * 20; index++) {
-          const offerItem =
-            offerItems[Math.floor(Math.random() * offerItems.length)];
+          let offerItem;
+
+          await createOfferItem()
+            .then((res) => {
+              console.log(res);
+
+              return (offerItem = res);
+            })
+            .catch();
+
           if (
             !offer.offerItems
               .map((offerItem) => offerItem.id)
@@ -46,5 +54,22 @@ export default class CreateItems implements Seeder {
         return offer;
       })
       .createMany(30);
+
+    async function createOfferItem() {
+      const offerItem = await factory(OfferItem)()
+        .map(async (offerItem) => {
+          while (true) {
+            const index = Math.floor(Math.random() * items.length);
+            const item = items[index];
+            if (item.deletedAt == null) {
+              offerItem.item = item;
+              return offerItem;
+            }
+          }
+        })
+        .create();
+
+      return offerItem;
+    }
   }
 }
